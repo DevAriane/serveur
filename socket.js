@@ -1,8 +1,13 @@
-const { io, Server } = require("socket.io");
-const { db } = require("./firebase");
-const getActiveOrders = require("./server");
+import { Server } from "socket.io"; // `io` n'existe pas dans socket.io v4, `Server` suffit
+import { db } from "./firebase.js";
+import { getActiveOrders } from "./server.js";
 
-const setupSocket = (server) => {
+//const { getActiveOrders } = require('./server');
+
+
+
+
+export const setupSocket = (server) => {
   const socketServer = new Server(server, {
     cors: {
       origin: "*", // Adjust for production (e.g., your app's URL)
@@ -29,8 +34,10 @@ const setupSocket = (server) => {
 
         const activeOrders = getActiveOrders();
 
+        console.log(' ctiveOrders', activeOrders);
+
         // Check from the in-memory cache instead of querying Firestore
-        const orderId = activeOrders && Object.keys(activeOrders).contains(partnerId) ? activeOrders[partnerId] : null;
+        const orderId = activeOrders && Object.keys(activeOrders).includes(partnerId) ? activeOrders[partnerId] : null;
 
         if (orderId) {
           console.log('orderId 111', orderId);
@@ -58,4 +65,3 @@ const setupSocket = (server) => {
   });
 };
 
-module.exports = { setupSocket };
