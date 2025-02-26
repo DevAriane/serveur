@@ -1,5 +1,6 @@
-const { db } = require('./firebase');
-const { Expo } = require('expo-server-sdk');
+
+import { Expo } from 'expo-server-sdk';
+import { db } from './firebase.js';
 
 const EXPO_ACCESS_TOKEN  =  'SzGXow1JeRY1neT-ZWXVU8SzwQQep2IHKx-VW3-p'
 
@@ -10,7 +11,7 @@ const expo = new Expo({
 });
 
 // Helper function to send notifications to partners
-const sendNotificationsToPartners = async (partners, order) => {
+export const sendNotificationsToPartners = async (partners, order) => {
   
 
     // const message = {
@@ -88,7 +89,9 @@ const sendNotificationsToPartners = async (partners, order) => {
 };
 
 // Helper function to send notifications to customers
-const sendNotificationToCustomer = async (userId) => {
+export const sendNotificationToCustomer = async (userId) => {
+
+  console.log('send to user');
   try {
     const customerDoc = await db.collection('users').doc(userId).get();
     const customer = customerDoc.data();
@@ -112,5 +115,3 @@ const sendNotificationToCustomer = async (userId) => {
     console.error('Error sending notification to customer:', error);
   }
 };
-
-module.exports = { sendNotificationsToPartners, sendNotificationToCustomer };

@@ -1,10 +1,11 @@
-const express = require('express');
-const http = require('http');
-const cors = require('cors');
-const { setupSocket } = require('./socket');
-const { db } = require('./firebase');
-const { sendNotificationsToPartners, sendNotificationToCustomer } = require('./notifications');
-const { calculateDistance } = require('./utils/distance');
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
+import { setupSocket } from './socket.js';
+import { db } from './firebase.js';
+import { sendNotificationsToPartners, sendNotificationToCustomer } from './notifications.js';
+import { calculateDistance } from './utils/distance.js';
+
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +26,7 @@ const setupOrderListener = () => {
     snapshot.docChanges().forEach((change) => {
       const order = change.doc.data();
       const orderId = change.doc.id;
-      partnerID = order.deliveryPartnerId
+      const partnerID = order?.deliveryPartnerId
 
       if (change.type === "added" || change.type === "modified") {
         if (partnerID) {
@@ -61,7 +62,7 @@ const setupOrderListener = () => {
 
   db.collection('orders').where('status.current', '==', 'PICKEDUP').onSnapshot(async (snapshot) => {
     for (const change of snapshot.docChanges()) {
-      if (change.type === 'modified') {
+      if (change.type === 'added') {
         const newData = change.doc.data();
         try {
           await sendNotificationToCustomer(newData.userId);
@@ -81,13 +82,17 @@ const getNearbyPartners = async (location) => {
     //.filter(partner => calculateDistance(location, partner.location) <= 10);
 };
 
+export const getActiveOrders = () => {return activeOrders};
+
+console.log('getActiveorders : ',getActiveOrders());
+
 // Start server and listener
 server.listen(5000, () => {
   console.log('✅ Serveur en cours d’exécution sur le port 5000');
   setupOrderListener();
 });
 
-module.exports = () => activeOrders;
+
 
 
 

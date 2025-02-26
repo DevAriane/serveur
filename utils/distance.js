@@ -14,4 +14,4 @@ const calculateDistance = (loc1, loc2) => {
     return R * c; // Distance in km
   };
   
-  module.exports = { calculateDistance };
+export { calculateDistance };
