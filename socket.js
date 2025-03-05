@@ -12,7 +12,10 @@ export const setupSocket = (server) => {
   socketServer.on("connection", (socket) => {
     // Listen for location updates from delivery partners
     socket.on("location_update", async (data) => {
+      console.log('new Location')
       const { partnerId, location } = data;
+      console.log('Nl : ', location)
+      console.log('Nl partner : ', partnerId)
       try {
         // Update partner's location in Firestore
         await db.collection("delivery_partners").doc(partnerId).update({
@@ -41,6 +44,7 @@ export const setupSocket = (server) => {
 
     // Let customers join a "room" to listen for their order's location
     socket.on("join_order", (orderId) => {
+      console.log('join order : ', orderId);
       socket.join(`order_${orderId}`);
       console.log(`Customer joined order room: order_${orderId}`);
     });
