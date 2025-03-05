@@ -6,9 +6,10 @@ import { db } from './firebase.js';
 import { sendNotificationsToPartners, sendNotificationToCustomer } from './notifications.js';
 import { calculateDistance } from './utils/distance.js';
 
-
 const app = express();
 const server = http.createServer(app);
+
+const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(cors());
@@ -85,8 +86,8 @@ const getNearbyPartners = async (location) => {
 export const getActiveOrders = () => {return activeOrders};
 
 // Start server and listener
-server.listen(8001, () => {
-  console.log('✅ Serveur en cours d’exécution sur le port 5000');
+server.listen(PORT, () => {
+  console.log(`✅ Serveur en cours d’exécution sur le port ${PORT})`);
   setupOrderListener();
 });
 

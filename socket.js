@@ -5,8 +5,10 @@ import { getActiveOrders } from "./server.js";
 export const setupSocket = (server) => {
   const socketServer = new Server(server, {
     cors: {
-      origin: "*", // Adjust for production (e.g., your app's URL)
+      origin: "*", // Change selon ton domaine
+      //methods: ["GET", "POST"]
     },
+    transports: ["websocket", "polling"], // Assure la compatibilité
   });
 
   socketServer.on("connection", (socket) => {
