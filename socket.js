@@ -8,11 +8,13 @@ export const setupSocket = (server) => {
       origin: "*", // Change selon ton domaine
       //methods: ["GET", "POST"]
     },
+    allowEIO3: true, // Ajout pour éviter certains bugs
     transports: ["websocket", "polling"], // Assure la compatibilité
   });
 
   socketServer.on("connection", (socket) => {
-    // Listen for location updates from delivery partners
+    console.log("🟢 Nouvelle connexion WebSocket :", socket.id);
+    // Listen for location updates from delivery partners 
     socket.on("location_update", async (data) => {
       console.log('new Location')
       const { partnerId, location } = data;
